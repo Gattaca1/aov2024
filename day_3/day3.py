@@ -15,15 +15,13 @@ def get_data():
 
 def calculate(data):
     total = 0
-    
-    do_pattern = r"do\(\)"    
-    do_sections = re.split(do_pattern, data)
-
-    dont_pattern = r"don't\(\)"
+       
+    do_sections = re.split(r"do\(\)", data)
 
     for section in do_sections:
-        dont_sections = re.split(dont_pattern, section)
+        dont_sections = re.split(r"don't\(\)", section)
         
+        # Only add the first section if there are "don't" splits
         if(len(dont_sections) > 1):
             total = total + calc_sum(dont_sections[0])
         else:
@@ -34,12 +32,13 @@ def calculate(data):
 
 def calc_sum(section):
     temp_total = 0
-    pattern = r"mul\((\d{1,3}),(\d{1,3})\)"
-    matches = re.findall(pattern, section)
+    
+    matches = re.findall(r"mul\((\d{1,3}),(\d{1,3})\)", section)
 
     for match in matches:
         temp_total = temp_total + (int(match[0]) * int(match[1]))
     return temp_total
+
 
 if __name__ == "__main__":
     main()
