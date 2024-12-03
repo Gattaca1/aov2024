@@ -66,17 +66,6 @@ def test(data):
                     safe_tally += 1
                     break
     print(safe_tally)
-                
-                
-
-
-            
-            
-            
-
-            
-
-            
 
 
 if __name__ == "__main__":
