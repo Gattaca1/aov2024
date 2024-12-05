@@ -11,7 +11,6 @@ def get_input():
             if '|' in line:
                 key, value = map(int, line.split('|'))
 
-                # If the key is already in the dictionary, append the value to the list
                 if key not in pipe_separated_dict:
                     pipe_separated_dict[key] = []
                 pipe_separated_dict[key].append(value)
@@ -42,15 +41,51 @@ def is_valid_ordering(ordering, rules):
 def get_mid_value(ordering):
     return ordering[len(ordering) // 2]
 
+
+def sort(ordering, rules):
+    made_change = False
+
+    # is there any value to the left that violates the rules?
+    # step through them backwards
+
+    for i in range(len(ordering) - 1, -1, -1):
+
+        if ordering[i] not in rules:
+            continue
+        
+        for j in range(i - 1, -1, -1):
+            if ordering[j] in rules[ordering[i]]:
+
+                # move ordering[j] to the right of ordering[i]
+                value_to_move = ordering.pop(j)
+                ordering.insert(i + 1, value_to_move)
+                
+                made_change = True
+                break
+
+        if made_change:
+            break
+
+    # if a change was made, call sort again to recheck for rule violations
+    if made_change:
+        sort(ordering, rules)
+
+    return ordering
+
+
 def main():
     rules, orderings = get_input()
 
     tally = 0
+    incorrects_tally = 0
     for ordering in orderings:
         if is_valid_ordering(ordering, rules):
             tally = tally + get_mid_value(ordering)
+        else:
+            incorrects_tally = incorrects_tally + get_mid_value(sort(ordering, rules))
     
     print(tally)
+    print(incorrects_tally)
 
 
 if __name__ == "__main__":
